@@ -1,0 +1,5 @@
+exportPattern("^[[:alpha:]]+")
+#' @importFrom ("stats", "as.ts", "ts")
+#' @import (forecast)
+#' @import (e1071)
+#' @import (randomForest)
