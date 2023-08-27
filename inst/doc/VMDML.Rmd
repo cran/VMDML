@@ -1,0 +1,107 @@
+---
+title: "VMDML"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{VMDML}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+**Application of Variational Mode Decomposition Based Different Machine Learning Models**
+
+## Authors
+
+Pankaj Das (https://orcid.org/0000-0003-1672-2502)
+
+Girish Kumar Jha
+
+Achal Lama
+
+## Introduction
+
+The VMDML R package is designed for application of Variational Mode Decomposition based different Machine Learning models for univariate time series forecasting. This package provides five different function i.e. VMDARIMA, VMDELM, VMDRF, VMDSVR and VMDTDNN. It also provide you with accuracy measures along with an option to select the proportion of training and testing data sets. Users can choose among the available choices of parameters of Variational Mode Decomposition for fitting the ML Models. In this package we have modelled the dependency of the study variable assuming first order autocorrelation. This package will help the researchers working in the area of hybrid machine learning models.
+
+## Functions in the R package
+
+**VMDARIMA**- The VMDARIMA function helps to fit the Variational Mode Decomposition Based Autoregressive Moving Average Model. 
+
+**VMDELM**- The VMDELM function helps to fit the Variational Mode Decomposition based  Extreme Learning Machine Model.
+
+**VMDRF**- The VMDRF function helps to fit the Variational Mode Decomposition based Random Forest Model.
+
+**VMDSVR**- The VMDSVR function helps to fit the Variational Mode Decomposition based Support Vector Regression Model.
+
+**VMDTDNN**- The VMDTDNN function helps to fit the Variational Mode Decomposition based Time Delay Neural Network Model.
+
+
+## Background
+
+Variational mode decomposition (VMD) is one of the latest signal decomposition techniques, similar to EMD, first proposed by Dragomiretskiy and Zosso (2014). This is a an entirely non-recursive variational mode decomposition model,where the modes are extracted concurrently. The algorithm generates an ensemble of modes and their respective center frequencies, such that the modes collectively reproduce the input signal. Further one of Machine learning models like SVR, TDNN, RF etcapplied to each decomposed items to forecast them. Finally all forecasted values are aggregated to produce final forecast value (Das et al., 2019, 2020, 2022, 2023).
+
+
+## Reference
+
+*Dragomiretskiy, K. and Zosso, D.(2014). Variational Mode Decomposition. IEEE Transactions on Signal Processing, 62(3):531-544.(doi: 10.1109/TSP.2013.2288675).*
+
+*Das,P., Jha,G. K., Lama, A., Parsad, R. and Mishra, D. (2020). Empirical Mode Decomposition based Support Vector Regression for Agricultural Price Forecasting. Indian Journal of Extension Education, 56(2):7-12.(http://krishi.icar.gov.in/jspui/handle/123456789/44138).*
+
+*Das, P. Jha, G. K. and Lama, A. (2023). Empirical Mode Decomposition Based Ensemble Hybrid Machine Learning Models for Agricultural Commodity Price Forecasting. Statistics and Applications, 21(1),99-112.(http://krishi.icar.gov.in/jspui/handle/123456789/77772).*
+
+*Das, P., Jha, G. K., Lama, A. and Bharti (2022). EMD-SVR Hybrid Machine Learning Model and its Application in Agricultural Price Forecasting. Bhartiya Krishi Anusandhan Patrika. (DOI: 10.18805/BKAP385)*
+
+*Das, P. (2019). Study On Machine Learning Techniques Based Hybrid Model for Forecasting in Agriculture. Published Ph.D. Thesis.*
+
+*Choudhury, K., Jha, G. K., Das, P. and Chaturvedi, K. K. (2019). Forecasting Potato Price using Ensemble Artificial Neural Networks. Indian Journal of Extension Education, 55(1):71-77.(http://krishi.icar.gov.in/jspui/handle/123456789/44873).*
+
+*Das, P., Lama, A. and Jha, G. K. (2022). Variational Mode Decomposition based Machine Learning Models Optimized with Genetic Algorithm for Price Forecasting. Journal of the Indian Society of Agricultural Statistics, 76(3), 141-150. (http://krishi.icar.gov.in/jspui/handle/123456789/76648)*
+
+
+```{r setup}
+
+##Example how the package works
+library(VMDML)
+
+#Application
+# A Random time series dataset generation
+
+set.seed(6)
+data3 <- rnorm(300,6.6,.36)
+
+#Parameter setting
+alpha = 2000
+tau = 0
+K = 3
+k=0.8
+DC = FALSE
+init = 1
+tol = 1e-6
+#Application of VMDARIMA model
+VMDARIMA(data3,.8,alpha,tau,K,DC,init,tol)
+
+#Application of VMDELM model
+#VMDELM(data3,0.8,alpha,tau,K,DC,init,tol)
+
+
+#Parameter setting for RF model
+m = 3
+n =5
+
+#Application of VMDRF model
+VMDRF(data3,k,alpha,tau,K,DC,init,tol,m,n)
+
+#Application of VMDSVR model
+VMDSVR(data3,.8,alpha,tau,K,DC,init,tol,"radial","nu-regression")
+
+#Application of VMDTDNN model
+#VMDTDNN(data3,.8,alpha,tau,K,DC,init,tol,1,5,20,100)
+
+
+
+
+```

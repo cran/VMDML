@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>VMDML</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">VMDML</h1>
+
+
+
+<p><strong>Application of Variational Mode Decomposition Based Different
+Machine Learning Models</strong></p>
+<div id="authors" class="section level2">
+<h2>Authors</h2>
+<p>Pankaj Das (<a href="https://orcid.org/0000-0003-1672-2502" class="uri">https://orcid.org/0000-0003-1672-2502</a>)</p>
+<p>Girish Kumar Jha</p>
+<p>Achal Lama</p>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>The VMDML R package is designed for application of Variational Mode
+Decomposition based different Machine Learning models for univariate
+time series forecasting. This package provides five different function
+i.e. VMDARIMA, VMDELM, VMDRF, VMDSVR and VMDTDNN. It also provide you
+with accuracy measures along with an option to select the proportion of
+training and testing data sets. Users can choose among the available
+choices of parameters of Variational Mode Decomposition for fitting the
+ML Models. In this package we have modelled the dependency of the study
+variable assuming first order autocorrelation. This package will help
+the researchers working in the area of hybrid machine learning
+models.</p>
+</div>
+<div id="functions-in-the-r-package" class="section level2">
+<h2>Functions in the R package</h2>
+<p><strong>VMDARIMA</strong>- The VMDARIMA function helps to fit the
+Variational Mode Decomposition Based Autoregressive Moving Average
+Model.</p>
+<p><strong>VMDELM</strong>- The VMDELM function helps to fit the
+Variational Mode Decomposition based Extreme Learning Machine Model.</p>
+<p><strong>VMDRF</strong>- The VMDRF function helps to fit the
+Variational Mode Decomposition based Random Forest Model.</p>
+<p><strong>VMDSVR</strong>- The VMDSVR function helps to fit the
+Variational Mode Decomposition based Support Vector Regression
+Model.</p>
+<p><strong>VMDTDNN</strong>- The VMDTDNN function helps to fit the
+Variational Mode Decomposition based Time Delay Neural Network
+Model.</p>
+</div>
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Variational mode decomposition (VMD) is one of the latest signal
+decomposition techniques, similar to EMD, first proposed by
+Dragomiretskiy and Zosso (2014). This is a an entirely non-recursive
+variational mode decomposition model,where the modes are extracted
+concurrently. The algorithm generates an ensemble of modes and their
+respective center frequencies, such that the modes collectively
+reproduce the input signal. Further one of Machine learning models like
+SVR, TDNN, RF etcapplied to each decomposed items to forecast them.
+Finally all forecasted values are aggregated to produce final forecast
+value (Das et al., 2019, 2020, 2022, 2023).</p>
+</div>
+<div id="reference" class="section level2">
+<h2>Reference</h2>
+<p><em>Dragomiretskiy, K. and Zosso, D.(2014). Variational Mode
+Decomposition. IEEE Transactions on Signal Processing,
+62(3):531-544.(doi: 10.1109/TSP.2013.2288675).</em></p>
+<p><em>Das,P., Jha,G. K., Lama, A., Parsad, R. and Mishra, D. (2020).
+Empirical Mode Decomposition based Support Vector Regression for
+Agricultural Price Forecasting. Indian Journal of Extension Education,
+56(2):7-12.(<a href="http://krishi.icar.gov.in/jspui/handle/123456789/44138" class="uri">http://krishi.icar.gov.in/jspui/handle/123456789/44138</a>).</em></p>
+<p><em>Das, P. Jha, G. K. and Lama, A. (2023). Empirical Mode
+Decomposition Based Ensemble Hybrid Machine Learning Models for
+Agricultural Commodity Price Forecasting. Statistics and Applications,
+21(1),99-112.(<a href="http://krishi.icar.gov.in/jspui/handle/123456789/77772" class="uri">http://krishi.icar.gov.in/jspui/handle/123456789/77772</a>).</em></p>
+<p><em>Das, P., Jha, G. K., Lama, A. and Bharti (2022). EMD-SVR Hybrid
+Machine Learning Model and its Application in Agricultural Price
+Forecasting. Bhartiya Krishi Anusandhan Patrika. (DOI:
+10.18805/BKAP385)</em></p>
+<p><em>Das, P. (2019). Study On Machine Learning Techniques Based Hybrid
+Model for Forecasting in Agriculture. Published Ph.D. Thesis.</em></p>
+<p><em>Choudhury, K., Jha, G. K., Das, P. and Chaturvedi, K. K. (2019).
+Forecasting Potato Price using Ensemble Artificial Neural Networks.
+Indian Journal of Extension Education, 55(1):71-77.(<a href="http://krishi.icar.gov.in/jspui/handle/123456789/44873" class="uri">http://krishi.icar.gov.in/jspui/handle/123456789/44873</a>).</em></p>
+<p><em>Das, P., Lama, A. and Jha, G. K. (2022). Variational Mode
+Decomposition based Machine Learning Models Optimized with Genetic
+Algorithm for Price Forecasting. Journal of the Indian Society of
+Agricultural Statistics, 76(3), 141-150. (<a href="http://krishi.icar.gov.in/jspui/handle/123456789/76648" class="uri">http://krishi.icar.gov.in/jspui/handle/123456789/76648</a>)</em></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="do">##Example how the package works</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(VMDML)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#Application</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co"># A Random time series dataset generation</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">6</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>data3 <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">300</span>,<span class="fl">6.6</span>,.<span class="dv">36</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#Parameter setting</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="dv">2000</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>tau <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>K <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>k<span class="ot">=</span><span class="fl">0.8</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>DC <span class="ot">=</span> <span class="cn">FALSE</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>init <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>tol <span class="ot">=</span> <span class="fl">1e-6</span></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a><span class="co">#Application of VMDARIMA model</span></span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="fu">VMDARIMA</span>(data3,.<span class="dv">8</span>,alpha,tau,K,DC,init,tol)</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; Registered S3 method overwritten by &#39;quantmod&#39;:</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt;   method            from</span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="co">#&gt;   as.zoo.data.frame zoo</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="co">#&gt; $Total_No_IMF</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co">#&gt; $Prediction_Accuracy_VMDARIMA</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co">#&gt;       RMSE_out   MAD_out  MAPE_out    ME_out</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co">#&gt; [1,] 0.3623889 0.2843151 0.0435229 0.8769506</span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a><span class="co">#&gt; $Final_Prediction_VMDARIMA</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="co">#&gt; Time Series:</span></span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a><span class="co">#&gt; Start = 1 </span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="co">#&gt; End = 60 </span></span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a><span class="co">#&gt; Frequency = 1 </span></span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a><span class="co">#&gt;  [1] 6.385717 6.517013 6.560424 6.649272 6.625478 6.550825 6.467676 6.452364</span></span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a><span class="co">#&gt;  [9] 6.509343 6.590927 6.628264 6.593008 6.516362 6.462356 6.473832 6.538703</span></span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a><span class="co">#&gt; [17] 6.601909 6.612043 6.562997 6.497087 6.468619 6.499209 6.561528 6.603554</span></span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a><span class="co">#&gt; [25] 6.591915 6.538280 6.488016 6.481885 6.523062 6.576097 6.597344 6.570817</span></span>
+<span id="cb1-40"><a href="#cb1-40" tabindex="-1"></a><span class="co">#&gt; [33] 6.520063 6.487378 6.498617 6.542831 6.582688 6.585932 6.551426 6.508799</span></span>
+<span id="cb1-41"><a href="#cb1-41" tabindex="-1"></a><span class="co">#&gt; [41] 6.493073 6.515940 6.557208 6.582540 6.571975 6.535585 6.504041 6.502815</span></span>
+<span id="cb1-42"><a href="#cb1-42" tabindex="-1"></a><span class="co">#&gt; [49] 6.531659 6.565867 6.577382 6.557765 6.524257 6.504696 6.514427 6.544329</span></span>
+<span id="cb1-43"><a href="#cb1-43" tabindex="-1"></a><span class="co">#&gt; [57] 6.569242 6.569096 6.545040 6.517630</span></span>
+<span id="cb1-44"><a href="#cb1-44" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" tabindex="-1"></a><span class="co">#Application of VMDELM model</span></span>
+<span id="cb1-46"><a href="#cb1-46" tabindex="-1"></a><span class="co">#VMDELM(data3,0.8,alpha,tau,K,DC,init,tol)</span></span>
+<span id="cb1-47"><a href="#cb1-47" tabindex="-1"></a></span>
+<span id="cb1-48"><a href="#cb1-48" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" tabindex="-1"></a><span class="co">#Parameter setting for RF model</span></span>
+<span id="cb1-50"><a href="#cb1-50" tabindex="-1"></a>m <span class="ot">=</span> <span class="dv">3</span></span>
+<span id="cb1-51"><a href="#cb1-51" tabindex="-1"></a>n <span class="ot">=</span><span class="dv">5</span></span>
+<span id="cb1-52"><a href="#cb1-52" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" tabindex="-1"></a><span class="co">#Application of VMDRF model</span></span>
+<span id="cb1-54"><a href="#cb1-54" tabindex="-1"></a><span class="fu">VMDRF</span>(data3,k,alpha,tau,K,DC,init,tol,m,n)</span>
+<span id="cb1-55"><a href="#cb1-55" tabindex="-1"></a><span class="co">#&gt; Warning in randomForest.default(m, y, ...): invalid mtry: reset to within valid</span></span>
+<span id="cb1-56"><a href="#cb1-56" tabindex="-1"></a><span class="co">#&gt; range</span></span>
+<span id="cb1-57"><a href="#cb1-57" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-58"><a href="#cb1-58" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb1-59"><a href="#cb1-59" tabindex="-1"></a><span class="co">#&gt;  randomForest(formula = yt ~ ., data = traindata, mtry = m, ntree = n) </span></span>
+<span id="cb1-60"><a href="#cb1-60" tabindex="-1"></a><span class="co">#&gt;                Type of random forest: regression</span></span>
+<span id="cb1-61"><a href="#cb1-61" tabindex="-1"></a><span class="co">#&gt;                      Number of trees: 5</span></span>
+<span id="cb1-62"><a href="#cb1-62" tabindex="-1"></a><span class="co">#&gt; No. of variables tried at each split: 1</span></span>
+<span id="cb1-63"><a href="#cb1-63" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-64"><a href="#cb1-64" tabindex="-1"></a><span class="co">#&gt;           Mean of squared residuals: 7.736168e-05</span></span>
+<span id="cb1-65"><a href="#cb1-65" tabindex="-1"></a><span class="co">#&gt;                     % Var explained: 96.34</span></span>
+<span id="cb1-66"><a href="#cb1-66" tabindex="-1"></a><span class="co">#&gt; Warning in randomForest.default(m, y, ...): invalid mtry: reset to within valid</span></span>
+<span id="cb1-67"><a href="#cb1-67" tabindex="-1"></a><span class="co">#&gt; range</span></span>
+<span id="cb1-68"><a href="#cb1-68" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-69"><a href="#cb1-69" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb1-70"><a href="#cb1-70" tabindex="-1"></a><span class="co">#&gt;  randomForest(formula = yt ~ ., data = traindata, mtry = m, ntree = n) </span></span>
+<span id="cb1-71"><a href="#cb1-71" tabindex="-1"></a><span class="co">#&gt;                Type of random forest: regression</span></span>
+<span id="cb1-72"><a href="#cb1-72" tabindex="-1"></a><span class="co">#&gt;                      Number of trees: 5</span></span>
+<span id="cb1-73"><a href="#cb1-73" tabindex="-1"></a><span class="co">#&gt; No. of variables tried at each split: 1</span></span>
+<span id="cb1-74"><a href="#cb1-74" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-75"><a href="#cb1-75" tabindex="-1"></a><span class="co">#&gt;           Mean of squared residuals: 0.01355887</span></span>
+<span id="cb1-76"><a href="#cb1-76" tabindex="-1"></a><span class="co">#&gt;                     % Var explained: -18.04</span></span>
+<span id="cb1-77"><a href="#cb1-77" tabindex="-1"></a><span class="co">#&gt; Warning in randomForest.default(m, y, ...): invalid mtry: reset to within valid</span></span>
+<span id="cb1-78"><a href="#cb1-78" tabindex="-1"></a><span class="co">#&gt; range</span></span>
+<span id="cb1-79"><a href="#cb1-79" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-80"><a href="#cb1-80" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb1-81"><a href="#cb1-81" tabindex="-1"></a><span class="co">#&gt;  randomForest(formula = yt ~ ., data = traindata, mtry = m, ntree = n) </span></span>
+<span id="cb1-82"><a href="#cb1-82" tabindex="-1"></a><span class="co">#&gt;                Type of random forest: regression</span></span>
+<span id="cb1-83"><a href="#cb1-83" tabindex="-1"></a><span class="co">#&gt;                      Number of trees: 5</span></span>
+<span id="cb1-84"><a href="#cb1-84" tabindex="-1"></a><span class="co">#&gt; No. of variables tried at each split: 1</span></span>
+<span id="cb1-85"><a href="#cb1-85" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-86"><a href="#cb1-86" tabindex="-1"></a><span class="co">#&gt;           Mean of squared residuals: 0.01425294</span></span>
+<span id="cb1-87"><a href="#cb1-87" tabindex="-1"></a><span class="co">#&gt;                     % Var explained: -9.06</span></span>
+<span id="cb1-88"><a href="#cb1-88" tabindex="-1"></a><span class="co">#&gt; $Total_No_IMF</span></span>
+<span id="cb1-89"><a href="#cb1-89" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span>
+<span id="cb1-90"><a href="#cb1-90" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-91"><a href="#cb1-91" tabindex="-1"></a><span class="co">#&gt; $Prediction_Accuracy_VMDRF</span></span>
+<span id="cb1-92"><a href="#cb1-92" tabindex="-1"></a><span class="co">#&gt;      RMSE_out   MAD_out   MAPE_out    ME_out</span></span>
+<span id="cb1-93"><a href="#cb1-93" tabindex="-1"></a><span class="co">#&gt; [1,] 0.349558 0.2730837 0.04138256 0.9957001</span></span>
+<span id="cb1-94"><a href="#cb1-94" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-95"><a href="#cb1-95" tabindex="-1"></a><span class="co">#&gt; $Final_Prediction_VMDRF</span></span>
+<span id="cb1-96"><a href="#cb1-96" tabindex="-1"></a><span class="co">#&gt;  [1] 6.376167 6.465836 6.702820 6.479088 6.552101 6.535193 6.556291 6.416575</span></span>
+<span id="cb1-97"><a href="#cb1-97" tabindex="-1"></a><span class="co">#&gt;  [9] 6.582246 6.475146 6.407093 6.551189 6.338622 6.520634 6.831918 6.644199</span></span>
+<span id="cb1-98"><a href="#cb1-98" tabindex="-1"></a><span class="co">#&gt; [17] 6.689642 6.708327 6.359298 6.443065 6.514585 6.810095 6.563176 6.624794</span></span>
+<span id="cb1-99"><a href="#cb1-99" tabindex="-1"></a><span class="co">#&gt; [25] 6.650428 6.381170 6.578740 6.734643 6.644227 6.642471 6.392661 6.625165</span></span>
+<span id="cb1-100"><a href="#cb1-100" tabindex="-1"></a><span class="co">#&gt; [33] 6.435068 6.435709 6.622126 6.748587 6.561443 6.610452 6.483202 6.385544</span></span>
+<span id="cb1-101"><a href="#cb1-101" tabindex="-1"></a><span class="co">#&gt; [41] 6.484079 6.513913 6.707880 6.630965 6.406792 6.448278 6.638272 6.544460</span></span>
+<span id="cb1-102"><a href="#cb1-102" tabindex="-1"></a><span class="co">#&gt; [49] 6.545139 6.640979 6.403684 6.350179 6.429551 6.449874 6.680484 6.599530</span></span>
+<span id="cb1-103"><a href="#cb1-103" tabindex="-1"></a><span class="co">#&gt; [57] 6.520443 6.514219 6.387496</span></span>
+<span id="cb1-104"><a href="#cb1-104" tabindex="-1"></a></span>
+<span id="cb1-105"><a href="#cb1-105" tabindex="-1"></a><span class="co">#Application of VMDSVR model</span></span>
+<span id="cb1-106"><a href="#cb1-106" tabindex="-1"></a><span class="fu">VMDSVR</span>(data3,.<span class="dv">8</span>,alpha,tau,K,DC,init,tol,<span class="st">&quot;radial&quot;</span>,<span class="st">&quot;nu-regression&quot;</span>)</span>
+<span id="cb1-107"><a href="#cb1-107" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-108"><a href="#cb1-108" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb1-109"><a href="#cb1-109" tabindex="-1"></a><span class="co">#&gt; svm(formula = yt ~ ., data = traindata, kernel = ker.funct, type = svm.type)</span></span>
+<span id="cb1-110"><a href="#cb1-110" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-111"><a href="#cb1-111" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-112"><a href="#cb1-112" tabindex="-1"></a><span class="co">#&gt; Parameters:</span></span>
+<span id="cb1-113"><a href="#cb1-113" tabindex="-1"></a><span class="co">#&gt;    SVM-Type:  nu-regression </span></span>
+<span id="cb1-114"><a href="#cb1-114" tabindex="-1"></a><span class="co">#&gt;  SVM-Kernel:  radial </span></span>
+<span id="cb1-115"><a href="#cb1-115" tabindex="-1"></a><span class="co">#&gt;        cost:  1 </span></span>
+<span id="cb1-116"><a href="#cb1-116" tabindex="-1"></a><span class="co">#&gt;          nu:  0.5 </span></span>
+<span id="cb1-117"><a href="#cb1-117" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-118"><a href="#cb1-118" tabindex="-1"></a><span class="co">#&gt; Number of Support Vectors:  124</span></span>
+<span id="cb1-119"><a href="#cb1-119" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-120"><a href="#cb1-120" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-121"><a href="#cb1-121" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb1-122"><a href="#cb1-122" tabindex="-1"></a><span class="co">#&gt; svm(formula = yt ~ ., data = traindata, kernel = ker.funct, type = svm.type)</span></span>
+<span id="cb1-123"><a href="#cb1-123" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-124"><a href="#cb1-124" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-125"><a href="#cb1-125" tabindex="-1"></a><span class="co">#&gt; Parameters:</span></span>
+<span id="cb1-126"><a href="#cb1-126" tabindex="-1"></a><span class="co">#&gt;    SVM-Type:  nu-regression </span></span>
+<span id="cb1-127"><a href="#cb1-127" tabindex="-1"></a><span class="co">#&gt;  SVM-Kernel:  radial </span></span>
+<span id="cb1-128"><a href="#cb1-128" tabindex="-1"></a><span class="co">#&gt;        cost:  1 </span></span>
+<span id="cb1-129"><a href="#cb1-129" tabindex="-1"></a><span class="co">#&gt;          nu:  0.5 </span></span>
+<span id="cb1-130"><a href="#cb1-130" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-131"><a href="#cb1-131" tabindex="-1"></a><span class="co">#&gt; Number of Support Vectors:  123</span></span>
+<span id="cb1-132"><a href="#cb1-132" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-133"><a href="#cb1-133" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-134"><a href="#cb1-134" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb1-135"><a href="#cb1-135" tabindex="-1"></a><span class="co">#&gt; svm(formula = yt ~ ., data = traindata, kernel = ker.funct, type = svm.type)</span></span>
+<span id="cb1-136"><a href="#cb1-136" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-137"><a href="#cb1-137" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-138"><a href="#cb1-138" tabindex="-1"></a><span class="co">#&gt; Parameters:</span></span>
+<span id="cb1-139"><a href="#cb1-139" tabindex="-1"></a><span class="co">#&gt;    SVM-Type:  nu-regression </span></span>
+<span id="cb1-140"><a href="#cb1-140" tabindex="-1"></a><span class="co">#&gt;  SVM-Kernel:  radial </span></span>
+<span id="cb1-141"><a href="#cb1-141" tabindex="-1"></a><span class="co">#&gt;        cost:  1 </span></span>
+<span id="cb1-142"><a href="#cb1-142" tabindex="-1"></a><span class="co">#&gt;          nu:  0.5 </span></span>
+<span id="cb1-143"><a href="#cb1-143" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-144"><a href="#cb1-144" tabindex="-1"></a><span class="co">#&gt; Number of Support Vectors:  124</span></span>
+<span id="cb1-145"><a href="#cb1-145" tabindex="-1"></a><span class="co">#&gt; $Total_No_IMF</span></span>
+<span id="cb1-146"><a href="#cb1-146" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span>
+<span id="cb1-147"><a href="#cb1-147" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-148"><a href="#cb1-148" tabindex="-1"></a><span class="co">#&gt; $Prediction_Accuracy_VMDSVR</span></span>
+<span id="cb1-149"><a href="#cb1-149" tabindex="-1"></a><span class="co">#&gt;       RMSE_out   MAD_out   MAPE_out    ME_out</span></span>
+<span id="cb1-150"><a href="#cb1-150" tabindex="-1"></a><span class="co">#&gt; [1,] 0.3320138 0.2569197 0.03911157 0.9101023</span></span>
+<span id="cb1-151"><a href="#cb1-151" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-152"><a href="#cb1-152" tabindex="-1"></a><span class="co">#&gt; $Final_Prediction_VMDSVR</span></span>
+<span id="cb1-153"><a href="#cb1-153" tabindex="-1"></a><span class="co">#&gt;  [1] 6.480423 6.536723 6.635920 6.549690 6.511117 6.529582 6.482741 6.575923</span></span>
+<span id="cb1-154"><a href="#cb1-154" tabindex="-1"></a><span class="co">#&gt;  [9] 6.594332 6.495253 6.502583 6.525639 6.515993 6.603834 6.796880 6.665824</span></span>
+<span id="cb1-155"><a href="#cb1-155" tabindex="-1"></a><span class="co">#&gt; [17] 6.596457 6.622729 6.462741 6.502182 6.706677 6.735452 6.675357 6.639533</span></span>
+<span id="cb1-156"><a href="#cb1-156" tabindex="-1"></a><span class="co">#&gt; [25] 6.481453 6.478030 6.568227 6.606601 6.702437 6.711362 6.546776 6.544822</span></span>
+<span id="cb1-157"><a href="#cb1-157" tabindex="-1"></a><span class="co">#&gt; [33] 6.549525 6.529673 6.705733 6.742729 6.634898 6.570914 6.486457 6.433356</span></span>
+<span id="cb1-158"><a href="#cb1-158" tabindex="-1"></a><span class="co">#&gt; [41] 6.592343 6.692235 6.645196 6.656943 6.501565 6.370021 6.470655 6.585128</span></span>
+<span id="cb1-159"><a href="#cb1-159" tabindex="-1"></a><span class="co">#&gt; [49] 6.566176 6.616223 6.532478 6.373007 6.420126 6.479545 6.549845 6.612550</span></span>
+<span id="cb1-160"><a href="#cb1-160" tabindex="-1"></a><span class="co">#&gt; [57] 6.586957 6.482908 6.421796</span></span>
+<span id="cb1-161"><a href="#cb1-161" tabindex="-1"></a></span>
+<span id="cb1-162"><a href="#cb1-162" tabindex="-1"></a><span class="co">#Application of VMDTDNN model</span></span>
+<span id="cb1-163"><a href="#cb1-163" tabindex="-1"></a><span class="co">#VMDTDNN(data3,.8,alpha,tau,K,DC,init,tol,1,5,20,100)</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
